@@ -1,18 +1,30 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class UIManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private TextMeshProUGUI scoreText;
+
+    private void Awake()
     {
-        
+        scoreText.text = "0";
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnEnable()
     {
-        
+        EventBus.Instance.OnChanchedScore += OnChanchedScore;
+    }
+    
+    private void OnDisable()
+    {
+        EventBus.Instance.OnChanchedScore -= OnChanchedScore;
+    }
+    
+    private void OnChanchedScore()
+    {
+        scoreText.text = (Convert.ToInt32(scoreText.text) + 1).ToString();
     }
 }

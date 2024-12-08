@@ -1,18 +1,54 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class BallController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private float initialSpeed = 10f;
+
+    private Vector2 _direction;
+    private Rigidbody2D _rb;
+    private bool _isLaunched = false;
+
+    private void Start()
     {
-        
+        _rb = GetComponent<Rigidbody2D>();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        
+
+        if (!_isLaunched && (Input.GetMouseButtonDown(0) || Input.GetKeyDown(KeyCode.Space)))
+        {
+            LaunchBall();
+        }
+    }
+
+    private void LaunchBall()
+    {
+        _isLaunched = true;
+        Vector2 launchDirection = new Vector2(Random.Range(-0.3f, 0.3f), 1f).normalized;
+        _direction = launchDirection;
+        _rb.velocity = launchDirection * initialSpeed;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.GetComponent<PuddleController>())
+        {
+            float hitPoint = collision.contacts[0].point.x - collision.transform.position.x;
+            float paddleWidth = collision.collider.bounds.size.x;
+
+            float bounceAngle = hitPoint / (paddleWidth / 2);
+            
+            _direction = new Vector2(bounceAngle, 1).normalized;
+            _rb.velocity = _direction * initialSpeed;
+        }
+        else
+        {
+            Vector2 normal = collision.contacts[0].normal;
+            _direction = Vector2.Reflect(_direction, normal).normalized;
+            _rb.velocity = _direction * initialSpeed;
+        }
     }
 }

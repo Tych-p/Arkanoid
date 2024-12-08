@@ -1,18 +1,21 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+using System;
 
-public class EventBus : MonoBehaviour
+public class EventBus
 {
-    // Start is called before the first frame update
-    void Start()
+    private EventBus() { }
+
+    private static EventBus _instance;
+
+    public static EventBus Instance
     {
-        
+        get
+        {
+            if (_instance == null)
+                _instance = new EventBus();
+
+            return _instance;
+        }
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+    public Action OnChanchedScore;
 }
