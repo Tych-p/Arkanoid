@@ -24,6 +24,14 @@ public class BallController : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        if (_rb.velocity.magnitude < initialSpeed * 0.9f)
+        {
+            _rb.velocity = _rb.velocity.normalized * initialSpeed;
+        }
+    }
+
     private void LaunchBall()
     {
         _isLaunched = true;
