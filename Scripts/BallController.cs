@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using Random = UnityEngine.Random;
 
 public class BallController : MonoBehaviour
 {
@@ -26,6 +24,12 @@ public class BallController : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!_isLaunched)
+        {
+            transform.position = new Vector3(Camera.main.ScreenToWorldPoint(Input.mousePosition).x,
+                transform.position.y,
+                transform.position.z);
+        }
         if (_rb.velocity.magnitude < initialSpeed * 0.9f)
         {
             _rb.velocity = _rb.velocity.normalized * initialSpeed;
